@@ -7,6 +7,5 @@ include '../../libs/RestServer.php';
 
 
 $obj = new RestServer();
-$obj->getCarsData();
 
 // echo $apiDir, '-', $className, '-', $methodName, '-', $value, '-', $format;

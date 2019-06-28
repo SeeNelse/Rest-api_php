@@ -24,7 +24,10 @@ class RestServer
     $this->position = strpos($this->url, 'api');
     $this->linkRequest = substr($this->url, $this->position);
     list($this->apiDir, $this->className, $this->methodName, $this->value, $this->format) = explode('/', $this->linkRequest);
-    // echo $this->apiDir .' - '. $this->className .' - '. $this->methodName .' - '. $this->value .' - '. $this->format . '<br>';
+    // класс и метод с большой буквы
+    $this->className = ucfirst($this->className); 
+    $this->methodName = ucfirst($this->methodName);
+
 
     if (!$this->format && $this->value == '.json' ||
         !$this->format && $this->value == '.txt' ||
@@ -34,13 +37,18 @@ class RestServer
       $this->value = null;
     }
 
-    $this->className = ucfirst($this->className);
-    $this->methodName = ucfirst($this->methodName);
 
     // Метод запроса
-    $this->reqMethod = $_SERVER['REQUEST_METHOD'];
+    // $this->reqMethod = $_SERVER['REQUEST_METHOD'];
 
-    
+    if (!$_GET) {
+      $this->getCarsData();
+    } else {
+      if ($_GET['model'] || $_GET['year'] || $_GET['engine'] ||
+          $_GET['color'] || $_GET['max_speed'] || $_GET['price']) {
+        $this->getCarsByParams();
+      }
+    }
   }
 
   public function getCarsData() {
@@ -60,6 +68,12 @@ class RestServer
       }
       return new View($data, $this->format);
     }
+  }
+
+  public function getCarsByParams() {
+    $currentClass = new $this->className;
+    $data = $currentClass->getCarsByParams($_GET);
+    return new View($data, $this->format);
   }
 
   public function getError($no, $format = null) {

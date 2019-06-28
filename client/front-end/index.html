@@ -11,14 +11,17 @@
   <script>
   $(document).ready(function() {
     //json
-    // $.ajax({
-    //   type: "get",
-    //   dataType: "json",
-    //   url: "http://localhost/Rest/server/api/carshop/cars/.json",
-    //   success: function(resp){
-    //     console.log('all json:', resp);
-    //   },
-    // });
+    $.ajax({
+      type: "get",
+      dataType: "json",
+      data: {
+        year: '2015',
+      },
+      url: "http://localhost/Rest/server/api/carshop/cars",
+      success: function(resp){
+        console.log('all json:', resp);
+      },
+    });
     // $.ajax({
     //   type: "get",
     //   dataType: "json",
