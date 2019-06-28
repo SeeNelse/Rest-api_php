@@ -1,5 +1,6 @@
 RewriteEngine On
-RewriteBase /~user8/rest/server/api/carshop/
+RewriteBase /Rest/server/api/carshop/
+#RewriteBase /~user8/rest/server/api/carshop/
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^.*$ index.php
