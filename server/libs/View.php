@@ -12,21 +12,29 @@ class View
     switch($format)
     {
       case '.txt':
+        header("Access-Control-Allow-Origin: *");
+        // header("Access-Control-Allow-Origin: ".$_SERVER['HTTP_ORIGIN']); 
         header('Content-type: text/plain');
         header('Status: 200 OK');
         print_r($this->toTxt($data));
         break;
       case '.html':
+        header("Access-Control-Allow-Origin: *");
+        // header("Access-Control-Allow-Origin: ".$_SERVER['HTTP_ORIGIN']); 
         header('Content-type: text/html');
         header('Status: 200 OK');
         print_r($this->toHtml($data));
         break;
       case '.xml':
+        header("Access-Control-Allow-Origin: *");
+        // header("Access-Control-Allow-Origin: ".$_SERVER['HTTP_ORIGIN']); 
         header('Content-type: application/xml');
         header('Status: 200 OK');
         print_r($this->toXml($data));
         break;
       default:
+        header("Access-Control-Allow-Origin: *");
+        // header("Access-Control-Allow-Origin: ".$_SERVER['HTTP_ORIGIN']); 
         header('Content-Type: application/json');
         header('Status: 200 OK');
         print_r(json_encode($data));

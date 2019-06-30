@@ -41,6 +41,12 @@ class RestServer
     // Метод запроса
     // $this->reqMethod = $_SERVER['REQUEST_METHOD'];
 
+
+    // header("Access-Control-Allow-Origin: *"); 
+    // header('Content-Type: application/json');
+    // header('Status: 200 OK');
+    // echo json_encode($_GET);
+
     if (!$_GET) {
       $this->getCarsData();
     } else {
@@ -55,6 +61,7 @@ class RestServer
     $currentClass = new $this->className;
     if ($this->value != null && $this->value < 1) {
       $this->getError(1, $this->format);
+      return false;
     } else if (!$this->value) {
       $data = $currentClass->{'get'.$this->methodName}();
       if (!$data) {
@@ -65,12 +72,17 @@ class RestServer
       $data = $currentClass->{'get'.$this->methodName}($this->value);
       if (!$data) {
         return $this->getError(2, $this->format);
+        return false;
       }
       return new View($data, $this->format);
     }
   }
 
   public function getCarsByParams() {
+    if (!$_GET['year']) {
+      $this->getError(1, $this->format);
+      return false;
+    }
     $currentClass = new $this->className;
     $data = $currentClass->getCarsByParams($_GET);
     return new View($data, $this->format);
@@ -81,21 +93,25 @@ class RestServer
       switch($format)
       {
         case '.txt':
+          header("Access-Control-Allow-Origin: *"); 
           header('Content-type: text/plain');
           header('Status: 204 No Content');
           print_r('Error: Incorrect value');
           break;
         case '.html':
+          header("Access-Control-Allow-Origin: *"); 
           header('Content-type: text/html');
           header('Status: 204 No Content');
           print_r('<div>Error: Incorrect value</div>');
           break;
         case '.xml':
+          header("Access-Control-Allow-Origin: *"); 
           header('Content-type: application/xml');
           header('Status: 204 No Content');
           print_r($this->toXmlError('Incorrect value'));
           break;
         default:
+          header("Access-Control-Allow-Origin: *"); 
           header('Content-Type: application/json');
           header('Status: 204 No Content');
           $arrTemp = ['Error' => 'Incorrect value'];
@@ -107,21 +123,25 @@ class RestServer
       switch($format)
       {
         case '.txt':
+          header("Access-Control-Allow-Origin: *"); 
           header('Content-type: text/plain');
           header('Status: 404 Not found');
           print_r('Error: Not found');
           break;
         case '.html':
+          header("Access-Control-Allow-Origin: *"); 
           header('Content-type: text/html');
           header('Status: 404 Not found');
           print_r('<div>Error: Not found</div>');
           break;
         case '.xml':
+          header("Access-Control-Allow-Origin: *"); 
           header('Content-type: application/xml');
           header('Status: 404 Not found');
           print_r($this->toXmlError('Not found'));
           break;
         default:
+          header("Access-Control-Allow-Origin: *"); 
           header('Content-Type: application/json');
           header('Status: 404 Not found');
           $arrTemp = ['Error' => 'Not found'];
