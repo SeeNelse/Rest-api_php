@@ -1,0 +1,6 @@
+RewriteEngine On
+RewriteBase /Rest/server/api/user/
+#RewriteBase /~user8/rest/server/api/user/
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^.*$ index.php

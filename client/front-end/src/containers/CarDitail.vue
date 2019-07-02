@@ -34,7 +34,6 @@ export default {
     }
   },
   created() {
-    console.log(this.$route.params.id);
     Store.fetchCarById(this.$route.params.id).then(data => {this.car = data[0]}); 
   },
 }

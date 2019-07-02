@@ -23,9 +23,16 @@
 
             <b-nav-item-dropdown right>
               <!-- Using 'button-content' slot -->
-              <template slot="button-content"><em>User</em></template>
-              <b-dropdown-item href="#">Profile</b-dropdown-item>
-              <b-dropdown-item href="#">Sign Out</b-dropdown-item>
+              <template slot="button-content"><em><b>Guest</b></em></template>
+              <b-dropdown-item class="user__drop">
+                <b-button class="user__btn" v-b-modal.modal-1>Log In</b-button>
+              </b-dropdown-item>
+              <b-dropdown-item class="user__drop">
+                <b-button class="user__btn" v-b-modal.modal-2>Sign Up</b-button>
+              </b-dropdown-item>
+
+
+
             </b-nav-item-dropdown>
           </b-navbar-nav>
         </b-collapse>
@@ -34,6 +41,73 @@
     <b-container class="bv-example-row">
       <router-view/>
     </b-container>
+
+    <!-- modal -->
+    <!-- Log In -->
+      <b-modal id="modal-1" title="Log In" hide-footer>
+        <b-form @submit="logInSubmit">
+          <b-form-group id="input-group-1" label="Your Email:" label-for="input-1">
+            <b-form-input
+              id="input-1"
+              v-model="logIn.email"
+              required
+              placeholder="Enter email"
+              type="email"
+            ></b-form-input>
+          </b-form-group>
+
+          <b-form-group id="input-group-2" label="Your Password:" label-for="input-2">
+            <b-form-input
+              id="input-2"
+              v-model="logIn.password"
+              required
+              placeholder="Enter password"
+              type="password"
+            ></b-form-input>
+
+          </b-form-group>
+          <b-button type="submit" variant="primary">Submit</b-button>
+        </b-form>
+      </b-modal>
+
+
+      <!-- Sign Up -->
+      <b-modal id="modal-2" title="Sign Up" hide-footer>
+        <b-form @submit="signUpSubmit">
+          <b-form-group id="input-group-1" label="Your Name*:" label-for="input-1">
+            <b-form-input
+              id="input-1"
+              v-model="signIn.name"
+              required
+              placeholder="Enter Name"
+              type="text"
+            ></b-form-input>
+          </b-form-group>
+
+          <b-form-group id="input-group-2" label="Your Email*:" label-for="input-2">
+            <b-form-input
+              id="input-2"
+              v-model="signIn.email"
+              required
+              placeholder="Enter email"
+              type="email"
+            ></b-form-input>
+          </b-form-group>
+
+          <b-form-group id="input-group-3" label="Your Password*:" label-for="input-3">
+            <b-form-input
+              id="input-3"
+              v-model="signIn.password"
+              required
+              placeholder="Enter password"
+              type="password"
+            ></b-form-input>
+          </b-form-group>
+          <b-button type="submit" variant="primary">Submit</b-button>
+        </b-form>
+      </b-modal>
+
+
   </div>
 </template>
 
@@ -43,15 +117,43 @@ export default {
   data() {
     return {
       search: {
-        input: ''
+        input: '',
+      },
+      logIn: {
+        email: '',
+        password: '',
+      },
+      signIn: {
+        name: '',
+        email: '',
+        password: '',
       }
     }
   },
   methods: {
-    searchSubmit(evt) {
-      evt.preventDefault()
-      // alert(JSON.stringify(this.search.input))
+    searchSubmit(event) {
+      event.preventDefault()
       this.$router.push({ path: `/car/${this.search.input}` })
+    },
+    logInSubmit(event) {
+      event.preventDefault();
+      console.log(this.logIn);
+
+      fetch("http://localhost/Rest/server/api/user/signup",
+      {
+        method: "POST",
+        headers: {
+          'Accept': 'application/json',
+          // 'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(this.logIn)
+      })
+        .then(function(res){ return res.json(); })
+        .then(function(data){ alert( JSON.stringify( data ) ) })
+    },
+    signUpSubmit(event) {
+      event.preventDefault();
+      console.log(this.signIn);
     },
   }
 }
@@ -59,13 +161,26 @@ export default {
 
 <style>
 #app {
-  /* font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50; */
 }
 .navbar {
   margin-bottom: 40px;
+}
+.user__drop {
+  padding: 0 !important;
+}
+.user__btn {
+  display: block !important;
+  width: 100% !important;
+  padding: 0.25rem 1.5rem !important;
+  clear: both !important;
+  font-weight: 400 !important;
+  color: #212529 !important;
+  text-align: inherit !important;
+  white-space: nowrap !important;
+  background-color: transparent !important;
+  border: 0 !important;
+}
+.user__btn:focus {
+  box-shadow: none;
 }
 </style>

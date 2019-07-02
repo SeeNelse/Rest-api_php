@@ -20,17 +20,20 @@ export default {
   data() {
     return {
       store: Store,
+      fromSearch: false,
     }
   },
   created() {
-    if (!this.store.cars.length) {
+    if (!this.store.cars.length || this.$router.history.current.path === '/') {
       Store.fetchAllCars();
     }
   },
-  props: {
-    
-  },
-  methods: {
+  watch: {
+    '$route' (to) {
+      if (to.path == '/') {
+        Store.fetchAllCars();
+      }
+    }
   }
 }
 </script>

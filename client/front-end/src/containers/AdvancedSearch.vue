@@ -84,18 +84,15 @@ export default {
       if (!this.form.year || this.form.year.length != 4) {
         return false;
       }
-      // alert(JSON.stringify(this.form));
-      fetch('http://localhost/Rest/server/api/carshop/cars', {
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-        },
-        body: JSON.stringify(this.form),
-      })
-        .then(response => response.json()) // парсит JSON ответ в Javascript объект
-        // .then(response => console.log(response))
-        .then(data => console.log(data));
-      // console.log(JSON.stringify(this.form));
+      let url = new URL("http://localhost/Rest/server/api/carshop/cars"),
+      params = this.form;
+      Object.keys(params).forEach(key => url.searchParams.append(key, params[key]))
+      fetch(url)
+        .then(response => response.json())
+        .then(json => {
+          this.store.cars = json;
+          this.$router.push({ path: '/advanced-search-result' });
+        });
     },
   },
   computed: {

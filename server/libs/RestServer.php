@@ -2,6 +2,7 @@
 
 include 'config.php';
 include 'CarShop.php';
+include 'User.php';
 include 'View.php';
 
 class RestServer
@@ -24,10 +25,16 @@ class RestServer
     $this->position = strpos($this->url, 'api');
     $this->linkRequest = substr($this->url, $this->position);
     list($this->apiDir, $this->className, $this->methodName, $this->value, $this->format) = explode('/', $this->linkRequest);
+    if (!$this->methodName) {
+      return false;
+    }
     // класс и метод с большой буквы
     $this->className = ucfirst($this->className); 
     $this->methodName = ucfirst($this->methodName);
 
+    if ($this->methodName == 'signup') {
+      var_dump($_POST);
+    }
 
     if (!$this->format && $this->value == '.json' ||
         !$this->format && $this->value == '.txt' ||
@@ -57,7 +64,8 @@ class RestServer
     }
   }
 
-  public function getCarsData() {
+  public function getCarsData() 
+  {
     $currentClass = new $this->className;
     if ($this->value != null && $this->value < 1) {
       $this->getError(1, $this->format);
@@ -78,7 +86,8 @@ class RestServer
     }
   }
 
-  public function getCarsByParams() {
+  public function getCarsByParams() 
+  {
     if (!$_GET['year']) {
       $this->getError(1, $this->format);
       return false;
@@ -88,7 +97,8 @@ class RestServer
     return new View($data, $this->format);
   }
 
-  public function getError($no, $format = null) {
+  public function getError($no, $format = null) 
+  {
     if ($no == 1) {
       switch($format)
       {
@@ -151,7 +161,8 @@ class RestServer
       }
   }
 
-  private function toXmlError($error) {
+  private function toXmlError($error) 
+  {
     $xmlError = new SimpleXMLElement('<error/>');
     $xmlError->addChild('error-message', $error);
     return $xmlError->asXML();

@@ -24,5 +24,10 @@ export default new Router({
       name: 'AdvancedSearch',
       component: AdvancedSearch
     },
+    {
+      path: '/advanced-search-result',
+      name: 'AdvancedSearchResult',
+      component: CarsList
+    },
   ]
 })
