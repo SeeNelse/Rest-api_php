@@ -7,8 +7,11 @@ class User
 
   }
 
-  public function getSignup() {
+  public function getLoginData() {
+    return $_GET;
+  }
 
-    return;
+  public function setSignupData() {
+    return $_GET;
   }
 }

@@ -46,9 +46,9 @@
     <!-- Log In -->
       <b-modal id="modal-1" title="Log In" hide-footer>
         <b-form @submit="logInSubmit">
-          <b-form-group id="input-group-1" label="Your Email:" label-for="input-1">
+          <b-form-group id="input-group-1" label="Your Email:" label-for="log-in-email">
             <b-form-input
-              id="input-1"
+              id="log-in-email"
               v-model="logIn.email"
               required
               placeholder="Enter email"
@@ -56,9 +56,9 @@
             ></b-form-input>
           </b-form-group>
 
-          <b-form-group id="input-group-2" label="Your Password:" label-for="input-2">
+          <b-form-group id="input-group-2" label="Your Password:" label-for="log-in-pass">
             <b-form-input
-              id="input-2"
+              id="log-in-pass"
               v-model="logIn.password"
               required
               placeholder="Enter password"
@@ -74,9 +74,9 @@
       <!-- Sign Up -->
       <b-modal id="modal-2" title="Sign Up" hide-footer>
         <b-form @submit="signUpSubmit">
-          <b-form-group id="input-group-1" label="Your Name*:" label-for="input-1">
+          <b-form-group id="input-group-1" label="Your Name*:" label-for="sign-up-name">
             <b-form-input
-              id="input-1"
+              id="sign-up-name"
               v-model="signIn.name"
               required
               placeholder="Enter Name"
@@ -84,9 +84,9 @@
             ></b-form-input>
           </b-form-group>
 
-          <b-form-group id="input-group-2" label="Your Email*:" label-for="input-2">
+          <b-form-group id="input-group-2" label="Your Email*:" label-for="sign-up-email">
             <b-form-input
-              id="input-2"
+              id="sign-up-email"
               v-model="signIn.email"
               required
               placeholder="Enter email"
@@ -94,9 +94,9 @@
             ></b-form-input>
           </b-form-group>
 
-          <b-form-group id="input-group-3" label="Your Password*:" label-for="input-3">
+          <b-form-group id="input-group-3" label="Your Password*:" label-for="sign-up-pass">
             <b-form-input
-              id="input-3"
+              id="sign-up-pass"
               v-model="signIn.password"
               required
               placeholder="Enter password"
@@ -120,52 +120,75 @@ export default {
         input: '',
       },
       logIn: {
-        email: '',
-        password: '',
+        email: 'seenelse@gmail.com',
+        password: 'fdfdfsd',
       },
       signIn: {
-        name: '',
-        email: '',
-        password: '',
+        username: 'Vlad',
+        email: 'seenelse@gmail.com',
+        password: 'asdfsadf',
       }
     }
   },
   methods: {
     searchSubmit(event) {
       event.preventDefault()
-      this.$router.push({ path: `/car/${this.search.input}` })
+      if (this.search.input) {
+        this.$router.push({ path: `/car/${this.search.input}` })
+      }
+      
     },
     logInSubmit(event) {
       event.preventDefault();
-      console.log(this.logIn);
 
-      fetch("http://localhost/Rest/server/api/user/signup",
-      {
-        method: "POST",
-        headers: {
-          'Accept': 'application/json',
-          // 'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(this.logIn)
+      let url = new URL("http://localhost/Rest/server/api/user/login"),
+      params = this.logIn;
+      Object.keys(params).forEach(key => url.searchParams.append(key, params[key]))
+      fetch(url, {
+        method: 'PUT',
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
       })
-        .then(function(res){ return res.json(); })
-        .then(function(data){ alert( JSON.stringify( data ) ) })
+      .then((response) => {
+        response.json().then((response) => {
+          console.log(response);
+        })
+      })
+      .catch(err => {
+        console.error(err)
+      })
+
     },
     signUpSubmit(event) {
       event.preventDefault();
-      console.log(this.signIn);
+
+      let url = new URL("http://localhost/Rest/server/api/user/signup"),
+      params = this.signIn;
+      Object.keys(params).forEach(key => url.searchParams.append(key, params[key]))
+      fetch(url, {
+        method: 'POST',
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      })
+      .then((response) => {
+        response.json().then((response) => {
+          console.log(response);
+        })
+      })
+      .catch(err => {
+        console.error(err)
+      })
+
     },
   }
 }
 </script>
 
 <style>
-#app {
-}
 .navbar {
   margin-bottom: 40px;
 }
-.user__drop {
+.user__drop a {
   padding: 0 !important;
 }
 .user__btn {
@@ -181,6 +204,6 @@ export default {
   border: 0 !important;
 }
 .user__btn:focus {
-  box-shadow: none;
+  box-shadow: none !important;
 }
 </style>

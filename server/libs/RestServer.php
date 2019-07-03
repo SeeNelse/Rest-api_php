@@ -25,43 +25,70 @@ class RestServer
     $this->position = strpos($this->url, 'api');
     $this->linkRequest = substr($this->url, $this->position);
     list($this->apiDir, $this->className, $this->methodName, $this->value, $this->format) = explode('/', $this->linkRequest);
-    if (!$this->methodName) {
+    if (!$this->methodName) { // Есть ли имя метода в ссылке?
       return false;
     }
-    // класс и метод с большой буквы
+    // Класс и метод с большой буквы для дальнейшего вызова
     $this->className = ucfirst($this->className); 
     $this->methodName = ucfirst($this->methodName);
-
-    if ($this->methodName == 'signup') {
-      var_dump($_POST);
-    }
-
+    
+     // Проверяем на наличие формата и значения
     if (!$this->format && $this->value == '.json' ||
         !$this->format && $this->value == '.txt' ||
         !$this->format && $this->value == '.html' ||
-        !$this->format && $this->value == '.xml') { // проверяем на наличие формата и значения
+        !$this->format && $this->value == '.xml') 
+    {
       $this->format = $this->value;
       $this->value = null;
     }
 
 
-    // Метод запроса
-    // $this->reqMethod = $_SERVER['REQUEST_METHOD'];
-
-
-    // header("Access-Control-Allow-Origin: *"); 
-    // header('Content-Type: application/json');
-    // header('Status: 200 OK');
-    // echo json_encode($_GET);
-
-    if (!$_GET) {
-      $this->getCarsData();
-    } else {
-      if ($_GET['model'] || $_GET['year'] || $_GET['engine'] ||
-          $_GET['color'] || $_GET['max_speed'] || $_GET['price']) {
-        $this->getCarsByParams();
+    // Если запрос на Carshop
+    if ($this->className === 'Carshop') {
+      if (!$_GET) {
+        $this->getCarsData();
+      } else {
+        if ($_GET['model'] || $_GET['year'] || $_GET['engine'] ||
+            $_GET['color'] || $_GET['max_speed'] || $_GET['price']) {
+          $this->getCarsByParams();
+        }
       }
     }
+
+
+    // Если запрос на User
+    if ($this->className === 'User') {
+      $positionSymbol = strpos($this->methodName, '?');
+      $currentMethod = substr($this->methodName, 0, $positionSymbol);
+      $currentClass = new $this->className;
+      if ($currentMethod === 'Login') {
+        header("Access-Control-Allow-Origin: *");
+        header("Access-Control-Allow-Credentials: true");
+        header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT");
+        header("Access-Control-Allow-Headers: Origin, Content-Type, Accept");
+        header('Content-type: *');
+        header('Status: 200 OK');
+        if ($_GET['email'] && strlen($_GET['password']) > 4) {
+          $this->getLoginData($currentMethod, $currentClass);
+        }
+      }
+      if ($currentMethod === 'Signup') {
+        header("Access-Control-Allow-Origin: *");
+        header("Access-Control-Allow-Credentials: true");
+        header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT");
+        header("Access-Control-Allow-Headers: Origin, Content-Type, Accept");
+        header('Content-type: *');
+        header('Status: 200 OK');
+        if (strlen($_GET['username']) < 16 && $_GET['email'] && strlen($_GET['password']) > 4) {
+          $this->setSignupData($currentMethod, $currentClass);
+        } else {
+          return false;
+        }
+      }
+    }
+
+    
+    
   }
 
   public function getCarsData() 
@@ -160,6 +187,19 @@ class RestServer
         }
       }
   }
+
+  public function getLoginData($currentMethod, $currentClass) {
+    $data = $currentClass->{'get'.$currentMethod.'Data'}();
+    echo json_encode($data);
+    return;
+  }
+
+  public function setSignupData($currentMethod, $currentClass) {
+    $data = $currentClass->{'set'.$currentMethod.'Data'}();
+    echo json_encode($data);
+    return;
+  }
+
 
   private function toXmlError($error) 
   {

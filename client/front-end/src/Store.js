@@ -18,6 +18,9 @@ export default new Vue({
       return fetch('http://localhost/Rest/server/api/carshop/cars/'+id)
         .then(response => response.json())
         .then(data => {
+          if (data.Error) {
+            return false;
+          }
           return data;
         });
     }

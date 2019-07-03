@@ -2,6 +2,7 @@
   <b-col cols="12" class="cars__item">
     <b-card
       no-body
+      v-if='car'
     >
       <b-card-body>
         <b-card-title>{{car.model}}</b-card-title>
@@ -16,6 +17,11 @@
       </b-list-group>
 
       <b-card-footer class="cars__price"><h5>Price: {{car.price}}</h5></b-card-footer>
+    </b-card>
+    <b-card v-else>
+      <b-card-body>
+        <b-card-title>Not found</b-card-title>
+      </b-card-body>
     </b-card>
   </b-col>
 </template>

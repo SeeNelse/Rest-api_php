@@ -58,6 +58,10 @@
         ></b-form-input>
       </b-form-group>
       
+
+       <b-alert show variant="danger" v-if='notFound'>Not found</b-alert>
+
+
       <b-button type="submit" variant="primary">Search</b-button>
     </b-form>
   </b-col>
@@ -73,6 +77,7 @@ export default {
   data() {
     return {
       store: Store,
+      notFound: false,
       form: {
         year: ''
       },
@@ -90,8 +95,12 @@ export default {
       fetch(url)
         .then(response => response.json())
         .then(json => {
-          this.store.cars = json;
-          this.$router.push({ path: '/advanced-search-result' });
+          if (json.length) {
+            this.store.cars = json;
+            this.$router.push({ path: '/advanced-search-result' });
+          } else {
+            this.notFound = true;
+          }
         });
     },
   },
