@@ -93,12 +93,11 @@ class RestServer
       $positionSymbol = strpos($this->methodName, '?');
       $currentMethod = substr($this->methodName, 0, $positionSymbol);
       $currentClass = new $this->className;
-      header("Access-Control-Allow-Origin: *");
-      header("Access-Control-Allow-Credentials: true");
-      header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT");
-      header("Access-Control-Allow-Headers: Origin, Content-Type, Accept");
-      header('Content-type: *');
-      echo json_encode('yes');
+      if ($currentMethod === 'Checkout') {
+        $this->setCheckout($currentMethod, $currentClass);
+      } else if ($currentMethod === 'Order') {
+        $this->getOrder($currentMethod, $currentClass);
+      }
     }
     
   }
@@ -136,7 +135,8 @@ class RestServer
     return new View($data, $this->format);
   }
 
-  public function getLoginData($currentMethod, $currentClass) {
+  public function getLoginData($currentMethod, $currentClass) 
+  {
     $data = $currentClass->{'get'.$currentMethod.'Data'}();
     if ($data) {
       return new View($data, $this->format);
@@ -145,13 +145,27 @@ class RestServer
     }
   }
 
-  public function setSignupData($currentMethod, $currentClass) {
+  public function setSignupData($currentMethod, $currentClass) 
+  {
     $data = $currentClass->{'set'.$currentMethod.'Data'}();
     if ($data) {
       return new View($data, $this->format);
     } else {
       return $this->getError(1, $this->format);
     }
+  }
+
+  public function setCheckout($currentMethod, $currentClass) {
+    $data = $currentClass->{'set'.$currentMethod}();
+    if ($data) {
+      return new View($data, $this->format);
+    } else {
+      return $this->getError(1, $this->format);
+    }
+  }
+
+  public function getOrder($currentMethod, $currentClass) {
+  
     return;
   }
 

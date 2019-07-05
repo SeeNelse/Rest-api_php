@@ -4,15 +4,7 @@
 
 
 <script>
-import Store from '@/Store';
-
 export default {
   name: 'NoAccess',
-  
 }
 </script>
-
-
-<style>
-
-</style>

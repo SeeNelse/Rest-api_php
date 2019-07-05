@@ -20,7 +20,7 @@ class User
     $queryPassCheck = $this->dbConnect->prepare("SELECT * FROM ".MYSQL_TABLE_USERS." WHERE email = '".$email."'");
     $userCheckResponse = $this->queryExecute($queryPassCheck);
     $currentPassHahs = $userCheckResponse[0]['password'];
-    
+
     if(password_verify($password, $currentPassHahs)) {
       $newToken = md5($email.time());
       $queryNewHash = $this->dbConnect->prepare("UPDATE ".MYSQL_TABLE_USERS." SET token='".$newToken."' WHERE email='".$email."'");
@@ -51,8 +51,11 @@ class User
     if (!$emailCheckResponse) {
       $queryRegisterSend = $this->dbConnect->prepare("INSERT INTO ".MYSQL_TABLE_USERS." (username, password, email) 
       VALUES ('".$username."', '".$password."', '".$email."');");
-      $this->queryExecute($queryRegisterSend);
-      return true;
+      if ($this->queryExecute($queryRegisterSend)) {
+        return true;
+      } else {
+        return false;
+      }
     } else {
       return false;
     }

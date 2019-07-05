@@ -10,10 +10,11 @@ export default new Vue({
         email: '',
         token: '',
         logInTime: null,
-        surname: '',
       },
       cart: {
+        name: '',
         carId: '',
+        surname: '',
         paymentType: '',
       }
     }
@@ -24,18 +25,23 @@ export default new Vue({
         .then(response => response.json())
         .then(data => {
           this.cars = data;
-        });
+        })
+        .catch(err => {
+          console.error(err)
+        })
     },
     fetchCarById(id) {
       return fetch('http://localhost/Rest/server/api/carshop/cars/'+id)
         .then(response => response.json())
         .then(data => {
-          console.log(data)
           if (data.Error) {
             return false;
           }
           return data;
-        });
+        })
+        .catch(err => {
+          console.error(err)
+        })
     }
   }
 })

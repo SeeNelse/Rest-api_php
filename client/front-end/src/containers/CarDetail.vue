@@ -2,7 +2,7 @@
   <b-col cols="12" class="cars__item">
     <b-card
       no-body
-      v-if='car'
+      v-if='store.carId'
     >
       <b-card-body>
         <b-card-title>{{store.carId.model}}</b-card-title>
