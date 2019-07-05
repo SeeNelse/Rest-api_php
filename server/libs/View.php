@@ -31,7 +31,10 @@ class View
         break;
       default:
         header("Access-Control-Allow-Origin: *");
-        header('Content-Type: application/json');
+        header("Access-Control-Allow-Credentials: true");
+        header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT");
+        header("Access-Control-Allow-Headers: Origin, Content-Type, Accept");
+        header('Content-type: *');
         header('Status: 200 OK');
         print_r(json_encode($data));
         break;

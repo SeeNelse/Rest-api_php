@@ -4,6 +4,7 @@ include 'config.php';
 include 'CarShop.php';
 include 'User.php';
 include 'View.php';
+include 'Order.php';
 
 class RestServer
 {
@@ -62,32 +63,43 @@ class RestServer
       $currentMethod = substr($this->methodName, 0, $positionSymbol);
       $currentClass = new $this->className;
       if ($currentMethod === 'Login') {
-        header("Access-Control-Allow-Origin: *");
-        header("Access-Control-Allow-Credentials: true");
-        header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT");
-        header("Access-Control-Allow-Headers: Origin, Content-Type, Accept");
-        header('Content-type: *');
-        header('Status: 200 OK');
-        if ($_GET['email'] && strlen($_GET['password']) > 4) {
+        if (
+          $_GET['email'] && 
+          strlen($_GET['password']) >= 4 &&
+          strlen($_GET['password']) <= 30
+        ) {
           $this->getLoginData($currentMethod, $currentClass);
+        } else {
+          return $this->getError(1, $this->format);
         }
       }
       if ($currentMethod === 'Signup') {
-        header("Access-Control-Allow-Origin: *");
-        header("Access-Control-Allow-Credentials: true");
-        header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT");
-        header("Access-Control-Allow-Headers: Origin, Content-Type, Accept");
-        header('Content-type: *');
-        header('Status: 200 OK');
-        if (strlen($_GET['username']) < 16 && $_GET['email'] && strlen($_GET['password']) > 4) {
+        if (
+          strlen($_GET['username']) <= 15 && 
+          strlen($_GET['username']) >= 4 && 
+          $_GET['email'] && 
+          strlen($_GET['password']) >= 4 &&
+          strlen($_GET['password']) <= 30
+        ) {
           $this->setSignupData($currentMethod, $currentClass);
         } else {
-          return false;
+          return $this->getError(1, $this->format);
         }
       }
     }
 
-    
+    // Если запрос на Order
+    if ($this->className === 'Order') {
+      $positionSymbol = strpos($this->methodName, '?');
+      $currentMethod = substr($this->methodName, 0, $positionSymbol);
+      $currentClass = new $this->className;
+      header("Access-Control-Allow-Origin: *");
+      header("Access-Control-Allow-Credentials: true");
+      header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT");
+      header("Access-Control-Allow-Headers: Origin, Content-Type, Accept");
+      header('Content-type: *');
+      echo json_encode('yes');
+    }
     
   }
 
@@ -124,6 +136,25 @@ class RestServer
     return new View($data, $this->format);
   }
 
+  public function getLoginData($currentMethod, $currentClass) {
+    $data = $currentClass->{'get'.$currentMethod.'Data'}();
+    if ($data) {
+      return new View($data, $this->format);
+    } else {
+      return $this->getError(1, $this->format);
+    }
+  }
+
+  public function setSignupData($currentMethod, $currentClass) {
+    $data = $currentClass->{'set'.$currentMethod.'Data'}();
+    if ($data) {
+      return new View($data, $this->format);
+    } else {
+      return $this->getError(1, $this->format);
+    }
+    return;
+  }
+
   public function getError($no, $format = null) 
   {
     if ($no == 1) {
@@ -148,7 +179,10 @@ class RestServer
           print_r($this->toXmlError('Incorrect value'));
           break;
         default:
-          header("Access-Control-Allow-Origin: *"); 
+          header("Access-Control-Allow-Origin: *");
+          header("Access-Control-Allow-Credentials: true");
+          header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT");
+          header("Access-Control-Allow-Headers: Origin, Content-Type, Accept");
           header('Content-Type: application/json');
           header('Status: 204 No Content');
           $arrTemp = ['Error' => 'Incorrect value'];
@@ -187,19 +221,6 @@ class RestServer
         }
       }
   }
-
-  public function getLoginData($currentMethod, $currentClass) {
-    $data = $currentClass->{'get'.$currentMethod.'Data'}();
-    echo json_encode($data);
-    return;
-  }
-
-  public function setSignupData($currentMethod, $currentClass) {
-    $data = $currentClass->{'set'.$currentMethod.'Data'}();
-    echo json_encode($data);
-    return;
-  }
-
 
   private function toXmlError($error) 
   {

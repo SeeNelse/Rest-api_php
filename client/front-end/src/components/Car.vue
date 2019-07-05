@@ -6,7 +6,7 @@
       <b-card-body>
         <b-card-title>{{car.model}}</b-card-title>
         <b-card-sub-title class="mb-2">{{car.brand}}</b-card-sub-title>
-          <router-link :to="{ name: 'CarDitail', params: { id: car.id }}" class="card-link">Read mode</router-link>
+          <router-link :to="{ name: 'CarDetail', params: { id: car.id }}" class="card-link">Read mode</router-link>
       </b-card-body>
 
       <b-card-footer class="cars__price"><h5>Price: {{car.price}}</h5></b-card-footer>

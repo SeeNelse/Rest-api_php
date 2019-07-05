@@ -9,8 +9,7 @@ class CarShop
     try {
       $this->dbConnect = new PDO('mysql:host='.MYSQL_SERVER.';dbname='.MYSQL_DB, MYSQL_USER, MYSQL_PASS);
     } catch (PDOException $e) {
-      $this->error = $e->getMessage();
-      print_r($this->error);
+      echo $e->getMessage();
     }
   }
 
@@ -51,8 +50,6 @@ class CarShop
     } else {
       return false;
     }
-    
-    
   }
 
   public function getCarsByParams($array) 

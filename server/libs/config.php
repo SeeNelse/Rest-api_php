@@ -15,3 +15,4 @@ define('MYSQL_PASS', '');
 define('MYSQL_TABLE_CARS', 'showroom_cars');
 define('MYSQL_TABLE_BRAND', 'showroom_brand');
 define('MYSQL_TABLE_ORDER', 'showroom_order');
+define('MYSQL_TABLE_USERS', 'showroom_users');

@@ -4,6 +4,18 @@ export default new Vue({
   data() {
     return {
       cars: [],
+      carId: {},
+      currentUser: {
+        username: '',
+        email: '',
+        token: '',
+        logInTime: null,
+        surname: '',
+      },
+      cart: {
+        carId: '',
+        paymentType: '',
+      }
     }
   },
   methods: {
@@ -18,6 +30,7 @@ export default new Vue({
       return fetch('http://localhost/Rest/server/api/carshop/cars/'+id)
         .then(response => response.json())
         .then(data => {
+          console.log(data)
           if (data.Error) {
             return false;
           }

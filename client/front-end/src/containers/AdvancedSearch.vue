@@ -84,8 +84,8 @@ export default {
     }
   },
   methods: {
-    advancedSearchSubmit(evt) {
-      evt.preventDefault()
+    advancedSearchSubmit(event) {
+      event.preventDefault()
       if (!this.form.year || this.form.year.length != 4) {
         return false;
       }
