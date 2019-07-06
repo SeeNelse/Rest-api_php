@@ -90,12 +90,25 @@ class RestServer
 
 
     // Если запрос на Order
-    if ($this->className === 'Order') { // проверка на формы
+    if ($this->className === 'Order') {
       $positionSymbol = strpos($this->methodName, '?');
       $currentMethod = substr($this->methodName, 0, $positionSymbol);
       $currentClass = new $this->className;
       if ($currentMethod === 'Checkout') {
-        $this->setCheckout($currentMethod, $currentClass);
+        if (
+          strlen($_GET['name']) <= 15 && 
+          strlen($_GET['name']) >= 4 && 
+          strlen($_GET['surname']) <= 15 && 
+          strlen($_GET['surname']) >= 3 && 
+          $_GET['email'] && 
+          strlen($_GET['paymentType']) &&
+          strlen($_GET['carId'])
+        
+        ) {
+          $this->setCheckout($currentMethod, $currentClass);
+        } else {
+          return $this->getError(1, $this->format);
+        }
       } else if ($this->methodName === 'Orders') {
         if ($this->value) {
           $this->getOrder($this->methodName, $currentClass);
