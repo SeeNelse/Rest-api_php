@@ -70,6 +70,7 @@ export default {
         surname: this.store.cart.surname,
         carId: this.store.cart.carId,
         paymentType: this.store.cart.paymentType,
+        email: this.store.currentUser.email
       }
       if (
         orderData.name.length >= 4 && 
@@ -89,6 +90,7 @@ export default {
           response.json().then((response) => {
             if (!response.Error) {
               this.orderSuccess = true;
+              this.store.cart = {};
               setTimeout(function() {
                 this.orderSuccess = false;
               }.bind(this), 2000);
@@ -112,8 +114,3 @@ export default {
   }
 }
 </script>
-
-
-<style>
-
-</style>

@@ -88,15 +88,20 @@ class RestServer
       }
     }
 
+
     // Если запрос на Order
-    if ($this->className === 'Order') {
+    if ($this->className === 'Order') { // проверка на формы
       $positionSymbol = strpos($this->methodName, '?');
       $currentMethod = substr($this->methodName, 0, $positionSymbol);
       $currentClass = new $this->className;
       if ($currentMethod === 'Checkout') {
         $this->setCheckout($currentMethod, $currentClass);
-      } else if ($currentMethod === 'Order') {
-        $this->getOrder($currentMethod, $currentClass);
+      } else if ($this->methodName === 'Orders') {
+        if ($this->value) {
+          $this->getOrder($this->methodName, $currentClass);
+        } else {
+          return $this->getError(1, $this->format);
+        }
       }
     }
     
@@ -165,8 +170,12 @@ class RestServer
   }
 
   public function getOrder($currentMethod, $currentClass) {
-  
-    return;
+    $data = $currentClass->{'get'.$currentMethod}($this->value);
+    if ($data) {
+      return new View($data, $this->format);
+    } else {
+      return $this->getError(1, $this->format);
+    }
   }
 
   public function getError($no, $format = null) 

@@ -151,9 +151,9 @@ export default {
         logInTime: new Date().getTime(),
       },
       signIn: {
-        username: 'Vlad',
-        email: 'seenelse@gmail.com',
-        password: 'asdfsadf',
+        username: '',
+        email: '',
+        password: '',
       },
       loginError: false,
       loginSuccess: false,
