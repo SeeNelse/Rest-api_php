@@ -1,9 +1,7 @@
 <?php
 
-class CarShop
+class CarShop extends QueryExecute
 {
-  private $error;
-
   public function __construct()
   {
     try {
@@ -81,12 +79,6 @@ class CarShop
     } else {
       return false;
     }
-  }
-
-  private function queryExecute($query) 
-  {
-    $query->execute();
-    return $query->fetchAll(PDO::FETCH_ASSOC);
   }
 
 }

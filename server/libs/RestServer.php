@@ -1,10 +1,11 @@
 <?php
 
 include 'config.php';
+include 'QueryExecute.php';
 include 'CarShop.php';
 include 'User.php';
-include 'View.php';
 include 'Order.php';
+include 'View.php';
 
 class RestServer
 {
@@ -17,7 +18,6 @@ class RestServer
   private $methodName;
   private $value;
   private $format;
-  private $reqMethod;
 
   public function __construct()
   {

@@ -1,6 +1,6 @@
 <?php
 
-class Order
+class Order extends QueryExecute
 {
   public function __construct() {
     try {
@@ -38,12 +38,6 @@ class Order
     } else {
       return false;
     }
-  }
-
-  private function queryExecute($query) 
-  {
-    $query->execute();
-    return $query->fetchAll(PDO::FETCH_ASSOC);
   }
 
 }

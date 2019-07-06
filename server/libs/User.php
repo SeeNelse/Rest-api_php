@@ -1,6 +1,6 @@
 <?php
 
-class User
+class User extends QueryExecute
 {
   public function __construct()
   {
@@ -61,9 +61,4 @@ class User
     }
   }
 
-  private function queryExecute($query) 
-  {
-    $query->execute();
-    return $query->fetchAll(PDO::FETCH_ASSOC);
-  }
 }
