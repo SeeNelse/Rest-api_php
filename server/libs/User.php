@@ -19,8 +19,10 @@ class User extends QueryExecute
     // Проверка пароля
     $queryPassCheck = $this->dbConnect->prepare("SELECT * FROM ".MYSQL_TABLE_USERS." WHERE email = '".$email."'");
     $userCheckResponse = $this->queryExecute($queryPassCheck);
+    if (!$userCheckResponse) {
+      return false;
+    }
     $currentPassHahs = $userCheckResponse[0]['password'];
-
     if(password_verify($password, $currentPassHahs)) {
       $newToken = md5($email.time());
       $queryNewHash = $this->dbConnect->prepare("UPDATE ".MYSQL_TABLE_USERS." SET token='".$newToken."' WHERE email='".$email."'");
@@ -45,17 +47,13 @@ class User extends QueryExecute
     //Проверяем email
     $queryEmailCheck = $this->dbConnect->prepare("SELECT * FROM ".MYSQL_TABLE_USERS." WHERE email = '".$email."'");
     $emailCheckResponse = $this->queryExecute($queryEmailCheck);
-
     $password = password_hash($password, PASSWORD_DEFAULT);
 
     if (!$emailCheckResponse) {
       $queryRegisterSend = $this->dbConnect->prepare("INSERT INTO ".MYSQL_TABLE_USERS." (username, password, email) 
       VALUES ('".$username."', '".$password."', '".$email."');");
-      if ($this->queryExecute($queryRegisterSend)) {
-        return true;
-      } else {
-        return false;
-      }
+      $this->queryExecute($queryRegisterSend);
+      return true;
     } else {
       return false;
     }

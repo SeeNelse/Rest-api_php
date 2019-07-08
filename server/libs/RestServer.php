@@ -29,6 +29,7 @@ class RestServer
     if (!$this->methodName) { // Есть ли имя метода в ссылке?
       return false;
     }
+    
     // Класс и метод с большой буквы для дальнейшего вызова
     $this->className = ucfirst($this->className); 
     $this->methodName = ucfirst($this->methodName);
@@ -42,7 +43,6 @@ class RestServer
       $this->format = $this->value;
       $this->value = null;
     }
-
 
     // Если запрос на Carshop
     if ($this->className === 'Carshop') {

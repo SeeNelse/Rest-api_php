@@ -1,4 +1,7 @@
+<Limit GET POST PUT DELETE>
+    Allow from all
+</Limit>
 RewriteEngine On
 RewriteBase /api/
-RewriteRule ^(.*)$ http://localhost/Rest/server/api/$1 [L]
-#RewriteRule (.*) http://192.168.0.15/~user8/rest/server/api/$1 [P]
+#RewriteRule ^(.*)$ http://localhost/Rest/server/api/$1 [L]
+RewriteRule (.*) http://192.168.0.15/~user8/rest/server/api/$1 [P]
